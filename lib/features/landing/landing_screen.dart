@@ -11,7 +11,11 @@ class LandingScreen extends HookConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: createAppBar(context, 'Welcome to CanYa'),
+      appBar: createAppBar(
+        context,
+        'Welcome to CanYa '
+        'Users',
+      ),
       body: const UserList(),
     );
   }
