@@ -1,4 +1,5 @@
 import 'package:canya_mobile/common/routing/util.dart';
+import 'package:canya_mobile/features/user/user_list/presentation/user_list.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
@@ -11,7 +12,7 @@ class LandingScreen extends HookConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: createAppBar(context, 'Welcome to CanYa'),
-      body: const Center(child: Text('Under Construction')),
+      body: const UserList(),
     );
   }
 }
