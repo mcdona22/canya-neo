@@ -51,6 +51,8 @@ class GraphGateway with UiLoggy {
           'an unexpected empty payload.',
         );
       }
+      loggy.debug("Found data: $body['data']");
+
       return body['data'] as Map<String, dynamic>;
     } catch (e) {
       rethrow;

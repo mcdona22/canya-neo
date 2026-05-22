@@ -12,13 +12,16 @@ class UserRepository with UiLoggy {
   Future<List<User>> findAllUsers() async {
     loggy.debug('Finding all users...');
     const query = r'''
-    query GetAllUsers {
-      users(options: { sort: [{ name: ASC }] }) {
-        id
-        name
+      query GetAllUsersSummary {
+        users(options: { sort: [{ name: ASC }] }) {
+          id
+          name
+          memberOfConnection {
+            totalCount
+          }
+        }
       }
-    }
-  ''';
+    ''';
 
     final Map<String, dynamic>? data = await _gateway
         .execute(query: query);
