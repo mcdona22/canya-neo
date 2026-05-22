@@ -1,5 +1,5 @@
 import 'package:canya_mobile/common/routing/util.dart';
-import 'package:canya_mobile/features/user/user_list/presentation/user_list.dart';
+import 'package:canya_mobile/features/user/presentation/user_list.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
