@@ -1,10 +1,11 @@
 import 'package:canya_mobile/common/async_value_widget.dart';
-import 'package:canya_mobile/features/user/data/user.dart';
 import 'package:canya_mobile/features/user/data/user_repository.dart';
 import 'package:canya_mobile/features/user/presentation/user_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
+
+import '../data/user_summary.dart';
 
 class UserList extends HookConsumerWidget with UiLoggy {
   const UserList({super.key});
@@ -13,13 +14,12 @@ class UserList extends HookConsumerWidget with UiLoggy {
   Widget build(BuildContext context, WidgetRef ref) {
     final userRepo = ref.watch(allUsersProvider);
 
-    final AsyncValue<List<User>> allUsers = ref.watch(
-      allUsersProvider,
-    );
+    final AsyncValue<List<UserSummary>> allUsers = ref
+        .watch(allUsersProvider);
 
-    return AsyncValueWidget<List<User>>(
+    return AsyncValueWidget<List<UserSummary>>(
       value: allUsers,
-      data: (List<User> users) {
+      data: (List<UserSummary> users) {
         loggy.debug(
           'Rendering UserList viewport with ${users.length} retrieved graph nodes.',
         );
@@ -35,7 +35,8 @@ class UserList extends HookConsumerWidget with UiLoggy {
         return ListView.builder(
           padding: const EdgeInsets.all(8.0),
           itemCount: users.length,
-          itemBuilder: (_, i) => UserTile(user: users[i]),
+          itemBuilder: (_, i) =>
+              UserTile(userSummary: users[i]),
         );
       },
     );

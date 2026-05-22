@@ -5,9 +5,10 @@ part 'user_summary.freezed.dart';
 part 'user_summary.g.dart';
 
 @freezed
-class UserSummary with _$UserSummary {
+abstract class UserSummary with _$UserSummary {
   const factory UserSummary({
-    required User user,
+    required User
+    user, // 👈 Composition: Core domain model remains completely untouched
     required int
     groupCount, // 👈 Ephemeral dashboard-specific metadata
   }) = _UserSummary;
