@@ -1,3 +1,4 @@
+import 'package:canya_mobile/common/presentation/centred_constrained_widget.dart';
 import 'package:canya_mobile/common/routing/util.dart';
 import 'package:canya_mobile/features/user/presentation/user_list.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,9 @@ class LandingScreen extends HookConsumerWidget
         'Welcome to CanYa '
         'Users',
       ),
-      body: const UserList(),
+      body: CentredConstrainedWidget(
+        child: const UserList(),
+      ),
     );
   }
 }

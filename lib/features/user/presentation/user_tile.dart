@@ -10,8 +10,11 @@ class UserTile extends HookConsumerWidget with UiLoggy {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    loggy.debug(
+      'User group info: ${userSummary.memberOfGroups.join(', ')}',
+    );
     final subtitle = [
-      'Groups: ${userSummary.groupCount}',
+      'Groups: ${userSummary.memberOfGroups.length}',
       '${userSummary.user.id}',
     ];
     return Card(

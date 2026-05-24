@@ -1,17 +1,27 @@
 # canya_mobile
 
-A new Flutter project.
+## Development Environment Setup
 
-## Getting Started
+Every time you restart your macOS environment, you need to spin up the local
+Graph Bridge gateway and the Flutter reactive code-generation background
+daemons. Follow the instructions below across separate Terminal tabs.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+### Terminal 1: Graph Bridge & Aurora Credentials
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Navigate to your Node.js backend directory to inject the temporary cluster
+authentication tokens into your shell instance and boot the gateway bridge.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+# 1. Export local Aurora cluster connection strings
+export AURORA_DB_USER="your_username"
+export AURORA_DB_PASSWORD="your_password"
+export AURORA_DB_HOST="your-aurora-cluster-endpoint"
+export AURORA_DB_PORT="5432"
+
+# 2. Fire up the backend gateway process
+npm run start
+
+# Run from your root Flutter project directory
+flutter pub run build_runner watch --delete-conflicting-outputs
