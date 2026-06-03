@@ -1,4 +1,5 @@
 import 'package:canya_mobile/common/async_value_widget.dart';
+import 'package:canya_mobile/features/group/data/group_repository.dart';
 import 'package:canya_mobile/features/user/data/user_repository.dart';
 import 'package:canya_mobile/features/user/presentation/user_tile.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +13,18 @@ class UserList extends HookConsumerWidget with UiLoggy {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userRepo = ref.watch(allUsersProvider);
-
     final AsyncValue<List<UserSummary>> allUsers = ref
         .watch(allUsersProvider);
+
+    final allGroups = ref.watch(allGroupsProvider);
+
 
     return AsyncValueWidget<List<UserSummary>>(
       value: allUsers,
       data: (List<UserSummary> users) {
         loggy.debug(
-          'Rendering UserList viewport with ${users.length} retrieved graph nodes.',
+          'Rendering UserList viewport with ${users
+              .length} retrieved graph nodes.',
         );
 
         if (users.isEmpty) {

@@ -9,21 +9,21 @@ class UserRepository with UiLoggy {
   final GraphGateway _gateway;
 
   UserRepository({required GraphGateway gateway})
-      : _gateway = gateway;
+    : _gateway = gateway;
 
   Future<List<UserSummary>> findAllUsers() async {
     loggy.debug('Finding all users...');
     const query = r'''
-      query GetAllUsersSummary {
-        users(options: { sort: [{ name: ASC }] }) {
-          id
-          name
-          memberOf {
+        query GetAllGroupSummary {
+          groups(options: { sort: [{ name: ASC }] }) {
             id
-            label: name
-          }
+            name
+            members {
+              id
+              label:name
+            }
+           } 
         }
-      }
     ''';
 
     final Map<String, dynamic>? data = await _gateway
@@ -39,10 +39,10 @@ class UserRepository with UiLoggy {
     return userJson.map((json) {
       final map = json as Map<String, Object?>;
       final memberOfConnection =
-      map['memberOfConnection']
-      as Map<String, dynamic>?;
+          map['memberOfConnection']
+              as Map<String, dynamic>?;
       final List<dynamic> groupsJson =
-      map['memberOf'] as List<dynamic>;
+          map['memberOf'] as List<dynamic>;
       final groupRefs = groupsJson
           .map((g) => RelationshipRef.fromJson(g))
           .toList();
@@ -57,13 +57,15 @@ class UserRepository with UiLoggy {
 }
 
 final userRepositoryProvider = Provider<UserRepository>((
-    ref,) {
+  ref,
+) {
   final gateway = ref.watch(graphGatewayProvider);
   return UserRepository(gateway: gateway);
 });
 
 final allUsersProvider = FutureProvider<List<UserSummary>>((
-    ref,) async {
+  ref,
+) async {
   // Grab your configured repository singleton
   final userRepository = ref.watch(userRepositoryProvider);
 

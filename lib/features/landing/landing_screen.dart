@@ -1,5 +1,6 @@
 import 'package:canya_mobile/common/presentation/centred_constrained_widget.dart';
 import 'package:canya_mobile/common/routing/util.dart';
+import 'package:canya_mobile/features/group/presentation/group_list.dart';
 import 'package:canya_mobile/features/user/presentation/user_list.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,10 +16,10 @@ class LandingScreen extends HookConsumerWidget
       appBar: createAppBar(
         context,
         'Welcome to CanYa '
-        'Users',
+            'Users',
       ),
       body: CentredConstrainedWidget(
-        child: const UserList(),
+        child: const GroupList(),
       ),
     );
   }
