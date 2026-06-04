@@ -20,22 +20,36 @@ class GroupList extends HookConsumerWidget with UiLoggy {
       value: allGroups,
       data: (groups) {
         return ListView.builder(
-          itemBuilder: (_, i) => CardWrapper(
-            child: ListTile(
-              // subtitle: Text(groups[i].group.id!),
-              subtitle: Text('Show Details'),
-              title: Text(groups[i].group.name),
-              leading: TextButton(
-                onPressed: () =>
-                    context.goNamed(AppRoute.group.name),
-                child: Text('Group Detail'),
+          itemBuilder: (_, i) =>
+              CardWrapper(
+                child: ListTile(
+                  // subtitle: Text(groups[i].group.id!),
+                  subtitle: Text('Show Details'),
+                  title: Text(groups[i].group.name),
+                  leading: TextButton(
+                    onPressed: () =>
+                        _navigate(
+                          context,
+                          groups[i].group.id ?? 'missing',
+                        ),
+                    child: Text('Group Detail'),
+                  ),
+                ),
               ),
-            ),
-          ),
 
           itemCount: groups.length,
         );
       },
+    );
+  }
+
+  _navigate(BuildContext context, String id) {
+    final route = '${AppRoute.group.name}/$id';
+
+    loggy.debug('Path to nav is $route');
+    context.pushNamed(
+      AppRoute.group.name,
+      pathParameters: {'id': id},
     );
   }
 }
