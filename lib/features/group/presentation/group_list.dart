@@ -1,7 +1,9 @@
 import 'package:canya_mobile/common/async_value_widget.dart';
 import 'package:canya_mobile/common/presentation/card_wrapper.dart';
+import 'package:canya_mobile/common/routing/router.dart';
 import 'package:canya_mobile/features/group/data/group_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
 
@@ -18,13 +20,18 @@ class GroupList extends HookConsumerWidget with UiLoggy {
       value: allGroups,
       data: (groups) {
         return ListView.builder(
-          itemBuilder: (_, i) =>
-              CardWrapper(
-                child: ListTile(
-                  subtitle: Text(groups[i].group.id!),
-                  title: Text(groups[i].group.name),
-                ),
+          itemBuilder: (_, i) => CardWrapper(
+            child: ListTile(
+              // subtitle: Text(groups[i].group.id!),
+              subtitle: Text('Show Details'),
+              title: Text(groups[i].group.name),
+              leading: TextButton(
+                onPressed: () =>
+                    context.goNamed(AppRoute.group.name),
+                child: Text('Group Detail'),
               ),
+            ),
+          ),
 
           itemCount: groups.length,
         );
