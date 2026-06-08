@@ -1,6 +1,7 @@
 import 'package:canya_mobile/common/async_value_widget.dart';
 import 'package:canya_mobile/common/presentation/card_wrapper.dart';
 import 'package:canya_mobile/common/routing/router.dart';
+import 'package:canya_mobile/features/group/data/group.dart';
 import 'package:canya_mobile/features/group/data/group_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,9 @@ class GroupList extends HookConsumerWidget with UiLoggy {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     loggy.debug('Listing the groups');
-    final allGroups = ref.watch(allGroupsProvider);
+    final AsyncValue<List<Group>> allGroups = ref.watch(
+      allGroupsProvider,
+    );
     return AsyncValueWidget(
       value: allGroups,
       data: (groups) {
@@ -24,15 +27,21 @@ class GroupList extends HookConsumerWidget with UiLoggy {
               CardWrapper(
                 child: ListTile(
                   // subtitle: Text(groups[i].group.id!),
-                  subtitle: Text('Show Details'),
-                  title: Text(groups[i].group.name),
+                  subtitle: Text(groups[i].subtitle ?? '',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  title: Text(
+                    groups[i].title,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   leading: TextButton(
                     onPressed: () =>
                         _navigate(
                           context,
-                          groups[i].group.id ?? 'missing',
+                          groups[i].id ?? 'missing',
                         ),
-                    child: Text('Group Detail'),
+                    child: Icon(
+                        Icons.arrow_right, size: 40.0),
                   ),
                 ),
               ),

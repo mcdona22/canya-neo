@@ -14,9 +14,9 @@ class LandingScreen extends HookConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: createAppBar(
-        context,
-        'Welcome to CanYa '
-            'Users',
+          context,
+          'Welcome to CanYa '
+
       ),
       body: CentredConstrainedWidget(
         child: const GroupList(),
