@@ -1,5 +1,8 @@
+import 'package:canya_mobile/common/data/Navigable.dart';
+import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/common/db/graph_gateway.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
+import 'package:canya_mobile/features/user/data/user.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
 
@@ -7,19 +10,18 @@ class GroupRepository with UiLoggy {
   final GraphGateway _gateway;
 
   GroupRepository({required GraphGateway gateway})
-      : _gateway = gateway;
+    : _gateway = gateway;
 
-  Future<Group?> findGroupById(String groupId) async {
+  Future<Group?> findGroupById(
+    String groupId, {
+    List<RelationshipType> fetchRelations = const [],
+  }) async {
     loggy.debug('fetching group "$groupId"');
-    const query = r'''
-      query GetGroupById($id:ID!){
-        groups(where: {id: $id}){
-          id
-          title
-          subtitle
-         }
-        }
-    ''';
+    final query = _GroupQueries.findGroupById(
+      relations: fetchRelations,
+    );
+
+    loggy.debug('query is: $query');
 
     final Map<String, dynamic>? data = await _gateway
         .execute(query: query, vars: {'id': groupId});
@@ -32,26 +34,33 @@ class GroupRepository with UiLoggy {
     }
 
     final List<dynamic> json = data['groups'];
+    if (json.isEmpty) return null;
+    final List<dynamic> members = json.first['members'];
+    // loggy.debug('Members: $members');
 
-    return json.isEmpty ? null : Group.fromJson(json.first);
+    final memberNodes =
+        members.map((json) => User.fromJson(json)).toList()
+            as List<Navigable>;
+
+    loggy.debug('users : $memberNodes');
+
+    final membersGroup = RelationshipGroup(
+      type: RelationshipType.members,
+      nodes: memberNodes,
+    );
+
+    Group retVal = Group.fromJson(json.first);
+
+    retVal = retVal.copyWith(nodes: [membersGroup]);
+
+    return retVal;
   }
 
   Future<List<Group>> findAllGroups() async {
-    loggy.debug('Finding all users...');
-    const query = r'''
-        query GetAllGroupSummary {
-          groups(options: { sort: [{ title: ASC }] }) {
-            id
-            title
-            subtitle
-            members {
-              id
-              name
-            }
-           } 
-        }
+    loggy.debug('Finding all groups...');
 
-      ''';
+    final query = _GroupQueries.allGroupSummary;
+    loggy.debug('query', query);
 
     final Map<String, dynamic>? data = await _gateway
         .execute(query: query);
@@ -67,35 +76,60 @@ class GroupRepository with UiLoggy {
       final map = json as Map<String, dynamic>;
       return Group.fromJson(map);
     }).toList();
-
-    // return userJson.map((json) {
-    //   final map = json as Map<String, Object?>;
-    //
-    //   final List<dynamic> groupsJson =
-    //   map['members'] as List<dynamic>;
-    //   final groupRefs = groupsJson
-    //       .map((g) => RelationshipRef.fromJson(g))
-    //       .toList();
-    //
-    //   final group = Group.fromJson(map);
-    //   return GroupSummary(
-    //     group: group,
-    //     groupUsers: groupRefs,
-    //   );
-    // }).toList();
   }
 }
 
 final groupRepositoryProvider = Provider<GroupRepository>((
-    ref,) {
+  ref,
+) {
   final gateway = ref.watch(graphGatewayProvider);
   return GroupRepository(gateway: gateway);
 });
 
 final allGroupsProvider = FutureProvider<List<Group>>((
-    ref,) async {
+  ref,
+) async {
   final groupRepository = ref.watch(
     groupRepositoryProvider,
   );
   return groupRepository.findAllGroups();
 });
+
+mixin _GroupQueries {
+  static const String allGroupSummary = r'''
+    query GetAllGroupSummary {
+      groups(options: { sort: [{ title: ASC }] }) {
+        id
+        title
+        subtitle
+      } 
+    }
+  ''';
+
+  static String findGroupById({
+    List<RelationshipType> relations = const [],
+  }) {
+    final String relationSection = relations
+        .map((relation) {
+          return '''
+          ${relation.graphQlField} {
+          id
+          title
+          subtitle
+        }''';
+        })
+        .join('\n');
+
+    return '''
+      query GetGroupById(\$id: ID!) {
+        groups(where: { id: \$id }) {
+          id
+          title
+          subtitle
+          $relationSection
+        }
+       }
+      
+    ''';
+  }
+}

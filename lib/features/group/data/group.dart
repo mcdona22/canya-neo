@@ -1,4 +1,5 @@
 import 'package:canya_mobile/common/data/navigable.dart';
+import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'group.freezed.dart';
@@ -13,6 +14,9 @@ abstract class Group with _$Group implements Navigable {
     String? id,
     required String title,
     String? subtitle,
+    @JsonKey(includeFromJson: false,
+        includeToJson: false) @Default([]) List<
+        RelationshipGroup> nodes,
   }) = _Group;
 
   @override
@@ -22,7 +26,7 @@ abstract class Group with _$Group implements Navigable {
   String? get id => this.id;
 
   @override
-  List<Navigable> get connectedNodes => [];
+  List<RelationshipGroup> get connectedNodes => this.nodes;
 
   factory Group.fromJson(Map<String, Object?> json) =>
       _$GroupFromJson(json);

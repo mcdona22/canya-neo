@@ -1,3 +1,5 @@
+import 'relationship_group.dart';
+
 abstract class Navigable {
   String? get id;
 
@@ -6,5 +8,5 @@ abstract class Navigable {
   String? get subtitle;
 
   /// Self-referential list allowing recursive nesting
-  List<Navigable> get connectedNodes;
+  List<RelationshipGroup> get connectedNodes;
 }

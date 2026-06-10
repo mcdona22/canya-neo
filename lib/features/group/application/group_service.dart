@@ -1,3 +1,4 @@
+import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
 import 'package:canya_mobile/features/group/data/group_repository.dart';
 import 'package:loggy/loggy.dart';
@@ -9,10 +10,12 @@ class GroupService with UiLoggy {
   final GroupRepository _groupRepository;
 
   GroupService({required GroupRepository groupRepository})
-    : _groupRepository = groupRepository;
+      : _groupRepository = groupRepository;
 
   Future<Group?> getGroupDetails(String groupId) async {
-    return _groupRepository.findGroupById(groupId);
+    return _groupRepository.findGroupById(groupId,
+        fetchRelations: [RelationshipType.members,
+          RelationshipType.invitedTo]);
   }
 
   String speaker() => 'Thats fine';
