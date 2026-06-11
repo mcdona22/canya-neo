@@ -1,3 +1,4 @@
+import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
 import 'package:loggy/loggy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,7 +11,10 @@ part 'group_screen_controller.g.dart';
 class GroupScreenController extends _$GroupScreenController
     with UiLoggy {
   @override
-  FutureOr<Group?> build(String groupId) async {
+  FutureOr<Group?> build(
+    String groupId, {
+    List<RelationshipType> relations = const [],
+  }) async {
     logDebug(
       'Initializing GroupScreenController for group: $groupId',
     );
@@ -20,6 +24,9 @@ class GroupScreenController extends _$GroupScreenController
 
     // Fetch the initial data. Returning this automatically wraps the
     // provider's state in an AsyncValue (AsyncLoading -> AsyncData/AsyncError).
-    return groupService.getGroupDetails(groupId);
+    return groupService.getGroupDetails(
+      groupId,
+      relationships: relations,
+    );
   }
 }

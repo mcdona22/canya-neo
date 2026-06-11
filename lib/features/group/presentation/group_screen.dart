@@ -14,14 +14,24 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
 
   const GroupScreen({required this.groupId, super.key});
 
+  final requiredRelationships = const [
+    RelationshipType.members,
+    RelationshipType.invitedTo,
+  ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme
+        .of(context)
+        .textTheme;
     final groupState = ref.watch(
-      groupScreenControllerProvider(groupId),
+      groupScreenControllerProvider(
+        groupId,
+        relations: requiredRelationships,
+      ),
     );
     final appBarTitle =
-        groupState.hasValue && groupState.value != null
+    groupState.hasValue && groupState.value != null
         ? groupState.value!.title
         : 'Loading Group...';
     return Scaffold(

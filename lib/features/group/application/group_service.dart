@@ -12,13 +12,19 @@ class GroupService with UiLoggy {
   GroupService({required GroupRepository groupRepository})
       : _groupRepository = groupRepository;
 
-  Future<Group?> getGroupDetails(String groupId) async {
-    return _groupRepository.findGroupById(groupId,
-        fetchRelations: [RelationshipType.members,
-          RelationshipType.invitedTo]);
+  Future<Group?> getGroupDetails(String groupId, {
+    List<RelationshipType> relationships = const [],
+  }) async {
+    loggy.debug(
+        'searching for group with an id of "$groupId"  and params $relationships');
+    return _groupRepository.findGroupById(
+      groupId,
+      fetchRelations: [
+        RelationshipType.members,
+        RelationshipType.invitedTo,
+      ],
+    );
   }
-
-  String speaker() => 'Thats fine';
 }
 
 @riverpod
