@@ -9,20 +9,20 @@ part 'group_service.g.dart';
 class GroupService with UiLoggy {
   final GroupRepository _groupRepository;
 
-  GroupService({required GroupRepository groupRepository})
-      : _groupRepository = groupRepository;
+  GroupService({required this._groupRepository});
 
-  Future<Group?> getGroupDetails(String groupId, {
+  // : _groupRepository = groupRepository;
+
+  Future<Group?> getGroupDetails(
+    String groupId, {
     List<RelationshipType> relationships = const [],
   }) async {
     loggy.debug(
-        'searching for group with an id of "$groupId"  and params $relationships');
+      'searching for group with an id of "$groupId"  and params $relationships',
+    );
     return _groupRepository.findGroupById(
       groupId,
-      fetchRelations: [
-        RelationshipType.members,
-        RelationshipType.invitedTo,
-      ],
+      fetchRelations: relationships,
     );
   }
 }

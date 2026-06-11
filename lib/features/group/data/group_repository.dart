@@ -16,12 +16,14 @@ class GroupRepository with UiLoggy {
     String groupId, {
     List<RelationshipType> fetchRelations = const [],
   }) async {
-    loggy.debug('fetching group "$groupId"');
+    loggy.debug(
+      'fetching group "$groupId" and $fetchRelations',
+    );
     final query = _GroupQueries.findGroupById(
       relations: fetchRelations,
     );
 
-    loggy.debug('query is: $query');
+    // loggy.debug('query is: $query');
 
     final Map<String, dynamic>? data = await _gateway
         .execute(query: query, vars: {'id': groupId});
@@ -37,6 +39,14 @@ class GroupRepository with UiLoggy {
     if (json.isEmpty) return null;
     final List<dynamic> members = json.first['members'];
     // loggy.debug('Members: $members');
+
+    final List<RelationshipGroup> relationships = [];
+
+    for (final r in fetchRelations) {
+      loggy.debug('Iterating:  the nodes for ${r.name}');
+      final List<dynamic> currentNodes = json.first[r.name];
+      loggy.debug('Current nodes for $r is $currentNodes');
+    }
 
     final memberNodes =
         members.map((json) => User.fromJson(json)).toList()
