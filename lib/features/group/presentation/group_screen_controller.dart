@@ -24,9 +24,12 @@ class GroupScreenController extends _$GroupScreenController
 
     // Fetch the initial data. Returning this automatically wraps the
     // provider's state in an AsyncValue (AsyncLoading -> AsyncData/AsyncError).
-    return groupService.getGroupDetails(
+
+    final controllerGroup = groupService.getGroupDetails(
       groupId,
       relationships: relations,
     );
+    loggy.debug('controllers group', controllerGroup);
+    return controllerGroup;
   }
 }

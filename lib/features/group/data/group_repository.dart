@@ -1,8 +1,7 @@
-import 'package:canya_mobile/common/data/Navigable.dart';
+import 'package:canya_mobile/common/data/navigable_summary.dart';
 import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/common/db/graph_gateway.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
-import 'package:canya_mobile/features/user/data/user.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
 
@@ -10,10 +9,9 @@ class GroupRepository with UiLoggy {
   final GraphGateway _gateway;
 
   GroupRepository({required GraphGateway gateway})
-    : _gateway = gateway;
+      : _gateway = gateway;
 
-  Future<Group?> findGroupById(
-    String groupId, {
+  Future<Group?> findGroupById(String groupId, {
     List<RelationshipType> fetchRelations = const [],
   }) async {
     loggy.debug(
@@ -39,33 +37,54 @@ class GroupRepository with UiLoggy {
     if (json.isEmpty) return null;
     final List<dynamic> members = json.first['members'];
     // loggy.debug('Members: $members');
+    final first = json.first;
+
+    Group foundEntity = Group.fromJson(json.first);
+
+    // for (final r in fetchRelations) {
+    //   loggy.debug('Iterating:  the nodes for ${r.name}');
+    //   final List<dynamic> currentNodes = json.first[r.name];
+    //   loggy.debug('Current nodes for $r is $currentNodes');
+    // }
+
+    // final memberNodes =
+    //     members.map((json) => User.fromJson(json)).toList()
+    //         as List<Navigable>;
+    //
+    // loggy.debug('users : $memberNodes');
+    //
+    // final membersGroup = RelationshipGroup(
+    //   type: RelationshipType.members,
+    //   nodes: memberNodes,
+    // );
 
     final List<RelationshipGroup> relationships = [];
-
     for (final r in fetchRelations) {
-      loggy.debug('Iterating:  the nodes for ${r.name}');
-      final List<dynamic> currentNodes = json.first[r.name];
-      loggy.debug('Current nodes for $r is $currentNodes');
+      loggy.debug('Find relationships for $r');
+      final List<dynamic> foundRelations = json.first[r
+          .graphQlField];
+      loggy.debug('found links', foundRelations);
+      final nodes = foundRelations.map((r) =>
+          NavigableSummary.fromJson
+            (r)).toList();
+      loggy.debug('found navigables: $foundRelations');
+      relationships.add(RelationshipGroup(type: r,
+          nodes: nodes));
     }
 
-    final memberNodes =
-        members.map((json) => User.fromJson(json)).toList()
-            as List<Navigable>;
-
-    loggy.debug('users : $memberNodes');
-
-    final membersGroup = RelationshipGroup(
-      type: RelationshipType.members,
-      nodes: memberNodes,
+    // process the payload and grab the relevant
+    // navigable links as reuired by the provided paran
+    loggy.debug('navs: $relationships');
+    foundEntity = foundEntity.copyWith(
+      nodes: relationships,
     );
 
-    Group retVal = Group.fromJson(json.first);
-
-    retVal = retVal.copyWith(nodes: [membersGroup]);
-
-    return retVal;
+    return foundEntity;
   }
 
+  /**
+   * Finds all the group nodes using the query defined below
+   */
   Future<List<Group>> findAllGroups() async {
     loggy.debug('Finding all groups...');
 
@@ -90,15 +109,13 @@ class GroupRepository with UiLoggy {
 }
 
 final groupRepositoryProvider = Provider<GroupRepository>((
-  ref,
-) {
+    ref,) {
   final gateway = ref.watch(graphGatewayProvider);
   return GroupRepository(gateway: gateway);
 });
 
 final allGroupsProvider = FutureProvider<List<Group>>((
-  ref,
-) async {
+    ref,) async {
   final groupRepository = ref.watch(
     groupRepositoryProvider,
   );
@@ -121,13 +138,13 @@ mixin _GroupQueries {
   }) {
     final String relationSection = relations
         .map((relation) {
-          return '''
+      return '''
           ${relation.graphQlField} {
           id
           title
           subtitle
         }''';
-        })
+    })
         .join('\n');
 
     return '''

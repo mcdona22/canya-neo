@@ -20,10 +20,13 @@ class GroupService with UiLoggy {
     loggy.debug(
       'searching for group with an id of "$groupId"  and params $relationships',
     );
-    return _groupRepository.findGroupById(
+
+    final foundGroup = await _groupRepository.findGroupById(
       groupId,
       fetchRelations: relationships,
     );
+    loggy.debug('found group', foundGroup);
+    return foundGroup;
   }
 }
 
