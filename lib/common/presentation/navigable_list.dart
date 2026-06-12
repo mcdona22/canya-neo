@@ -14,19 +14,18 @@ class NavigableList extends HookConsumerWidget
     return items.isEmpty
         ? const SizedBox.shrink()
         : Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: items
-          .map(
-            (item) =>
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-              ),
-              child: NavigableTile(item: item),
-            ),
-      )
-          .toList(),
-    );
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: items
+                .map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                    ),
+                    child: NavigableTile(item: item),
+                  ),
+                )
+                .toList(),
+          );
   }
 }
 
@@ -43,10 +42,8 @@ class NavigableTile extends HookConsumerWidget
     final theme = Theme.of(context);
     final hasSubtitle =
         item.subtitle != null &&
-            item.subtitle!.trim().isNotEmpty;
-    final textTheme = Theme
-        .of(context)
-        .textTheme;
+        item.subtitle!.trim().isNotEmpty;
+
     return Container(
       height: tileHeight,
       decoration: BoxDecoration(
@@ -70,16 +67,16 @@ class NavigableTile extends HookConsumerWidget
                 ),
                 child: Column(
                   crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                      CrossAxisAlignment.start,
                   mainAxisAlignment:
-                  MainAxisAlignment.center,
+                      MainAxisAlignment.center,
                   children: [
                     Text(
                       item.title,
                       style: theme.textTheme.bodyMedium
                           ?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                            fontWeight: FontWeight.w600,
+                          ),
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (hasSubtitle) ...[
@@ -88,10 +85,10 @@ class NavigableTile extends HookConsumerWidget
                         item.subtitle!,
                         style: theme.textTheme.bodySmall
                             ?.copyWith(
-                          color: theme
-                              .colorScheme
-                              .onSurfaceVariant,
-                        ),
+                              color: theme
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],

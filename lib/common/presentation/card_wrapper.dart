@@ -20,9 +20,11 @@ class CardWrapper extends HookConsumerWidget with UiLoggy {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: Theme.of(context).primaryColor.withOpacity(
-            0.3,
-          ), // Subdued brand color
+          color: Theme
+              .of(context)
+              .primaryColor
+              .withAlpha(30),
+          // Subdued brand color
           width: 1.5,
         ),
         borderRadius: BorderRadius.circular(
@@ -31,6 +33,5 @@ class CardWrapper extends HookConsumerWidget with UiLoggy {
       ),
       child: child,
     );
-    ;
   }
 }

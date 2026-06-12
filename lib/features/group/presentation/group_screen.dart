@@ -1,5 +1,4 @@
 import 'package:canya_mobile/common/async_value_widget.dart';
-import 'package:canya_mobile/common/data/navigable_summary.dart';
 import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/common/presentation/card_wrapper.dart';
 import 'package:canya_mobile/common/presentation/centred_constrained_widget.dart';
@@ -8,6 +7,8 @@ import 'package:canya_mobile/features/group/presentation/group_screen_controller
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
+
+import '../../../common/data/Navigable.dart';
 
 class GroupScreen extends HookConsumerWidget with UiLoggy {
   final String groupId;
@@ -21,9 +22,7 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme
-        .of(context)
-        .textTheme;
+    final textTheme = Theme.of(context).textTheme;
     final groupState = ref.watch(
       groupScreenControllerProvider(
         groupId,
@@ -31,7 +30,7 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
       ),
     );
     final appBarTitle =
-    groupState.hasValue && groupState.value != null
+        groupState.hasValue && groupState.value != null
         ? groupState.value!.title
         : 'Loading Group...';
     return Scaffold(
@@ -43,17 +42,6 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
           final groupInfo = group!;
           final subtitle = groupInfo.subtitle ?? 'Nothing';
 
-          // final List<RelationshipGroup> names =
-          //     group.connectedNodes;
-          // loggy.debug('relationships: ${names.length}');
-          // final members = names.first;
-          // // final nameList = members.nodes.map((member) =>
-          // // member.title)
-          // //     .toList().join(', ');
-          // loggy.debug('The members: ${members.nodes}');
-          //
-          // loggy.debug('The group is $group');
-          child:
           return Column(
             children: [
               SizedBox(
@@ -75,8 +63,9 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: NodesList(relations: group
-                        .nodes,),
+                    child: NodesList(
+                      relations: group.nodes,
+                    ),
                     // ListView(
                     //   children: [
                     //     Text(
@@ -117,21 +106,54 @@ class NodesList extends HookConsumerWidget with UiLoggy {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final count = relations.length;
-    return Center(
+    return Column(
+      children: relations
+          .map((r) => SummaryGroup(relationshipGroup: r))
+          .toList(),
+    );
+  }
+}
+
+class SummaryGroup extends HookConsumerWidget with UiLoggy {
+  final RelationshipGroup relationshipGroup;
+
+  const SummaryGroup({
+    required this.relationshipGroup,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final spacing = 8.0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
-          children: relations.map((r) =>
-              Text('${r.type
-                  .graphQlField} : ${r.nodes.length}'))
-              .toList()
+        children: [
+          Text(
+            '${relationshipGroup.type.graphQlField} ('
+            '${relationshipGroup.nodes.length})',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: relationshipGroup.nodes
+                .map(
+                  (node) => NavSummaryChip(summary: node),
+                )
+                .toList(),
+          ),
+        ],
       ),
     );
   }
 }
 
-
 class NavSummaryList extends HookConsumerWidget
     with UiLoggy {
-  final NavigableSummary summary;
+  final Navigable summary;
 
   const NavSummaryList({required this.summary, super.key});
 
@@ -141,3 +163,14 @@ class NavSummaryList extends HookConsumerWidget
   }
 }
 
+class NavSummaryChip extends HookConsumerWidget
+    with UiLoggy {
+  final Navigable summary;
+
+  const NavSummaryChip({required this.summary, super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Chip(label: Text(summary.title));
+  }
+}
