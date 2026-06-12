@@ -11,7 +11,8 @@ class UserTile extends HookConsumerWidget with UiLoggy {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     loggy.debug(
-      'User group info: ${userSummary.memberOfGroups.join(', ')}',
+      'User group info: ${userSummary.memberOfGroups.join(
+          ', ')}',
     );
     final subtitle = [
       'Groups: ${userSummary.memberOfGroups.length}',
@@ -28,7 +29,10 @@ class UserTile extends HookConsumerWidget with UiLoggy {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: Theme.of(context).primaryColor.withOpacity(
+          color: Theme
+              .of(context)
+              .primaryColor
+              .withOpacity(
             0.3,
           ), // Subdued brand color
           width: 1.5,
@@ -43,19 +47,28 @@ class UserTile extends HookConsumerWidget with UiLoggy {
           vertical: 8.0,
         ),
         leading: CircleAvatar(
-          backgroundColor: Theme.of(
+          backgroundColor: Theme
+              .of(
             context,
-          ).primaryColor.withOpacity(0.1),
+          )
+              .primaryColor
+              .withOpacity(0.1),
           child: Icon(
             Icons.person,
-            color: Theme.of(
+            color: Theme
+                .of(
               context,
-            ).colorScheme.inversePrimary,
+            )
+                .colorScheme
+                .inversePrimary,
           ),
         ),
         title: Text(
-          userSummary.user.name,
-          style: Theme.of(context).textTheme.titleLarge,
+          userSummary.user.title,
+          style: Theme
+              .of(context)
+              .textTheme
+              .titleLarge,
         ),
         subtitle: Text(
           subtitle.join('\n'),

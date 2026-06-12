@@ -1,3 +1,4 @@
+import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
 import 'package:canya_mobile/features/group/data/group_repository.dart';
 import 'package:loggy/loggy.dart';
@@ -8,14 +9,25 @@ part 'group_service.g.dart';
 class GroupService with UiLoggy {
   final GroupRepository _groupRepository;
 
-  GroupService({required GroupRepository groupRepository})
-    : _groupRepository = groupRepository;
+  GroupService({required this._groupRepository});
 
-  Future<Group?> getGroupDetails(String groupId) async {
-    return _groupRepository.findGroupById(groupId);
+  // : _groupRepository = groupRepository;
+
+  Future<Group?> getGroupDetails(
+    String groupId, {
+    List<RelationshipType> relationships = const [],
+  }) async {
+    loggy.debug(
+      'searching for group with an id of "$groupId"  and params $relationships',
+    );
+
+    final foundGroup = await _groupRepository.findGroupById(
+      groupId,
+      fetchRelations: relationships,
+    );
+    loggy.debug('found group', foundGroup);
+    return foundGroup;
   }
-
-  String speaker() => 'Thats fine';
 }
 
 @riverpod
