@@ -1,22 +1,24 @@
 import 'package:canya_mobile/features/group/presentation/group_screen.dart';
 import 'package:canya_mobile/features/landing/landing_screen.dart';
+import 'package:canya_mobile/features/user/presentation/user_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
 
-enum AppRoute { home, group }
+enum AppRoute { home, group, user }
 
 final routerConfig = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/user',
   debugLogDiagnostics: true,
   routes: [
     GoRoute(
       path: '/',
       name: AppRoute.home.name,
-      pageBuilder: (_, state) => MaterialPage(
-        child: LandingScreen(),
-        key: state.pageKey,
-      ),
+      pageBuilder: (_, state) =>
+          MaterialPage(
+            child: LandingScreen(),
+            key: state.pageKey,
+          ),
     ),
 
     GoRoute(
@@ -27,6 +29,19 @@ final routerConfig = GoRouter(
         logDebug('going to $groupId');
         return MaterialPage(
           child: GroupScreen(groupId: groupId),
+          key: state.pageKey,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: '/user',
+      name: AppRoute.user.name,
+      pageBuilder: (_, state) {
+        final groupId = state.pathParameters['id'] ?? '';
+        logDebug('going to $groupId');
+        return MaterialPage(
+          child: UserListScreen(),
           key: state.pageKey,
         );
       },
