@@ -1,74 +1,42 @@
-import 'package:canya_mobile/common/data/relationship_ref.dart';
+import 'package:canya_mobile/common/db/base_graph_repository.dart';
 import 'package:canya_mobile/common/db/graph_gateway.dart';
-import 'package:canya_mobile/features/user/data/user.dart';
-import 'package:canya_mobile/features/user/data/user_summary.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
 
-class UserRepository with UiLoggy {
-  final GraphGateway _gateway;
+import 'user.dart';
 
-  UserRepository({required GraphGateway gateway})
-    : _gateway = gateway;
+class UserRepository extends BaseGraphRepository<User>
+    with UiLoggy {
+  UserRepository({required super.gateway})
+      : super(apiKeyRoot: 'users');
 
-  Future<List<UserSummary>> findAllUsers() async {
-    loggy.debug('Finding all users...');
-    const query = r'''
-        query GetAllGroupSummary {
-          groups(options: { sort: [{ name: ASC }] }) {
+  @override
+  User entityFromJson(Map<String, dynamic> json) =>
+      User.fromJson(json);
+
+  @override
+  String buildFindAllQuery() {
+    return r'''
+        query GetAllUserSummary {
+          users(options: { sort: [{ title: ASC }] }) {
             id
-            name
-            members {
-              id
-              label:name
-            }
-           } 
-        }
+            title
+            subtitle
+        } 
+      }
     ''';
-
-    final Map<String, dynamic>? data = await _gateway
-        .execute(query: query);
-
-    if (data == null) {
-      loggy.warning('Query returned a null payload');
-      return [];
-    }
-    final List<dynamic> userJson = data['users'] ?? [];
-    loggy.debug('Data found', data['users']);
-
-    return userJson.map((json) {
-      final map = json as Map<String, Object?>;
-      final memberOfConnection =
-          map['memberOfConnection']
-              as Map<String, dynamic>?;
-      final List<dynamic> groupsJson =
-          map['memberOf'] as List<dynamic>;
-      final groupRefs = groupsJson
-          .map((g) => RelationshipRef.fromJson(g))
-          .toList();
-
-      final user = User.fromJson(map);
-      return UserSummary(
-        user: user,
-        memberOfGroups: groupRefs,
-      );
-    }).toList();
   }
 }
 
 final userRepositoryProvider = Provider<UserRepository>((
-  ref,
-) {
+    ref) {
   final gateway = ref.watch(graphGatewayProvider);
   return UserRepository(gateway: gateway);
 });
 
-final allUsersProvider = FutureProvider<List<UserSummary>>((
-  ref,
-) async {
-  // Grab your configured repository singleton
-  final userRepository = ref.watch(userRepositoryProvider);
-
-  // Execute the network traversal line
-  return await userRepository.findAllUsers();
+final allUsersProvider = FutureProvider<List<User>>((
+    ref,) async {
+  final groupRepository = ref.watch(userRepositoryProvider);
+  return groupRepository
+      .findAllEntities(); // Swapped to the base class method
 });

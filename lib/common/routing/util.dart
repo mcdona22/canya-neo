@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'router.dart';
-
-PreferredSizeWidget createAppBar(BuildContext context,
-    String title,) {
+PreferredSizeWidget createAppBar(
+  BuildContext context,
+  String title,
+) {
   return AppBar(
     title: Text(
       title,
-      style: Theme
-          .of(context)
-          .textTheme
-          .titleLarge,
+      style: Theme.of(context).textTheme.titleLarge,
     ),
     leading: IconButton(
       icon: const Icon(Icons.arrow_back),
@@ -27,12 +24,9 @@ PreferredSizeWidget createAppBar(BuildContext context,
     centerTitle: true,
     elevation: 1.0,
     // primary: true,
-    backgroundColor: Theme
-        .of(
+    backgroundColor: Theme.of(
       context,
-    )
-        .colorScheme
-        .inversePrimary,
+    ).colorScheme.inversePrimary,
     actions: [],
   );
 }
