@@ -49,7 +49,10 @@ class UserListScreen extends HookConsumerWidget
                       children: users
                           .map(
                             (user) =>
-                            NavSummaryChip(summary: user),
+                            NavSummaryChip(
+                                summary: user, onTap: () =>
+                                loggy.debug('Clicking '
+                                    '${user.title}')),
                       )
                           .toList(),
                     ),

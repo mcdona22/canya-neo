@@ -160,14 +160,13 @@ class SummaryGroup extends HookConsumerWidget with UiLoggy {
   }
 }
 
-class NavSummaryList extends HookConsumerWidget
-    with UiLoggy {
+class NavSummaryList extends StatelessWidget with UiLoggy {
   final Navigable summary;
 
   const NavSummaryList({required this.summary, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return const Center(child: Text('Under Construction'));
   }
 }
@@ -175,11 +174,20 @@ class NavSummaryList extends HookConsumerWidget
 class NavSummaryChip extends HookConsumerWidget
     with UiLoggy {
   final Navigable summary;
+  final VoidCallback? onTap;
 
-  const NavSummaryChip({required this.summary, super.key});
+  const NavSummaryChip({
+    required this.summary,
+    this.onTap,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Chip(label: Text(summary.title));
+    return ActionChip(
+      label: Text(summary.title),
+      onPressed: onTap,
+      avatar: const Icon(Icons.link, size: 16.0),
+    );
   }
 }
