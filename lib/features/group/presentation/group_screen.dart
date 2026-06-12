@@ -125,29 +125,38 @@ class SummaryGroup extends HookConsumerWidget with UiLoggy {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final spacing = 8.0;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        children: [
-          Text(
-            '${relationshipGroup.type.graphQlField} ('
-            '${relationshipGroup.nodes.length})',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: relationshipGroup.nodes
-                .map(
-                  (node) => NavSummaryChip(summary: node),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-    );
+    return relationshipGroup.nodes.isNotEmpty
+        ? Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  '${relationshipGroup.type.graphQlField} ('
+                  '${relationshipGroup.nodes.length})',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge,
+                ),
+
+                Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment:
+                      WrapCrossAlignment.center,
+                  children: relationshipGroup.nodes
+                      .map(
+                        (node) =>
+                            NavSummaryChip(summary: node),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
+          )
+        : SizedBox.shrink();
   }
 }
 
