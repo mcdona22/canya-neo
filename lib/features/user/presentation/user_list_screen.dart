@@ -1,9 +1,11 @@
 import 'package:canya_mobile/common/async_value_widget.dart';
 import 'package:canya_mobile/common/presentation/ui_dimensions.dart';
+import 'package:canya_mobile/common/routing/router.dart';
 import 'package:canya_mobile/common/routing/util.dart';
 import 'package:canya_mobile/features/group/presentation/group_screen.dart';
 import 'package:canya_mobile/features/user/data/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
 
@@ -31,31 +33,31 @@ class UserListScreen extends HookConsumerWidget
 
                 child: Text(
                   'App Users',
-                  style: Theme
-                      .of(
+                  style: Theme.of(
                     context,
-                  )
-                      .textTheme
-                      .titleLarge,
+                  ).textTheme.titleLarge,
                 ),
               ),
               AsyncValueWidget(
                 value: users,
-                data: (users) =>
-                    Wrap(
-                      spacing: paddingMedium,
-                      runSpacing: paddingMedium,
-                      alignment: WrapAlignment.center,
-                      children: users
-                          .map(
-                            (user) =>
-                            NavSummaryChip(
-                                summary: user, onTap: () =>
-                                loggy.debug('Clicking '
-                                    '${user.title}')),
+                data: (users) => Wrap(
+                  spacing: paddingMedium,
+                  runSpacing: paddingMedium,
+                  alignment: WrapAlignment.center,
+                  children: users
+                      .map(
+                        (user) => NavSummaryChip(
+                          summary: user,
+                          onTap: () => context.goNamed(
+                            AppRoute.userDetail.name,
+                            pathParameters: {
+                              'id': user.id!,
+                            },
+                          ),
+                        ),
                       )
-                          .toList(),
-                    ),
+                      .toList(),
+                ),
               ),
             ],
           ),

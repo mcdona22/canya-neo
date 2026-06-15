@@ -2,11 +2,12 @@ import 'package:canya_mobile/common/async_value_widget.dart';
 import 'package:canya_mobile/common/presentation/card_wrapper.dart';
 import 'package:canya_mobile/common/routing/router.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
-import 'package:canya_mobile/features/group/data/group_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loggy/loggy.dart';
+
+import '../data/group_repo.dart';
 
 class GroupList extends HookConsumerWidget with UiLoggy {
   const GroupList({super.key});
@@ -27,7 +28,8 @@ class GroupList extends HookConsumerWidget with UiLoggy {
               CardWrapper(
                 child: ListTile(
                   // subtitle: Text(groups[i].group.id!),
-                  subtitle: Text(groups[i].subtitle ?? '',
+                  subtitle: Text(
+                    groups[i].subtitle ?? '',
                     overflow: TextOverflow.ellipsis,
                   ),
                   title: Text(
