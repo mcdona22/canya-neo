@@ -21,6 +21,8 @@ class GraphGateway with UiLoggy {
     required String query,
     Map<String, dynamic>? vars,
   }) async {
+    loggy.debug('Query: $query');
+    loggy.debug('Variables: $vars');
     try {
       final response = await http.post(
         Uri.parse(uri),

@@ -1,9 +1,8 @@
 import 'package:canya_mobile/common/data/relationship_group.dart';
+import 'package:canya_mobile/features/group/application/group_service.dart';
 import 'package:canya_mobile/features/group/data/group.dart';
 import 'package:loggy/loggy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../application/group_service.dart';
 
 part 'group_screen_controller.g.dart';
 

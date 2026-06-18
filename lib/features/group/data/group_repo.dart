@@ -1,3 +1,4 @@
+import 'package:canya_mobile/common/data/relationship_group.dart';
 import 'package:canya_mobile/common/db/base_graph_repository.dart';
 import 'package:canya_mobile/common/db/graph_gateway.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,6 +26,27 @@ class GroupRepo extends BaseGraphRepository<Group>
         } 
       }
     ''';
+  }
+
+  @override
+  String buildFindByIdQuery(
+    List<RelationshipType> relations,
+  ) {
+    // TODO: implement buildFindByIdQuery
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement entityTypeName
+  String get entityTypeName => 'Group';
+
+  @override
+  Group copyWithNodes(
+    Group entity,
+    List<RelationshipGroup> nodes,
+  ) {
+    // TODO: implement copyWithNodes
+    throw UnimplementedError();
   }
 }
 

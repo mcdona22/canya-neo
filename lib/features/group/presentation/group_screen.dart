@@ -22,7 +22,9 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme
+        .of(context)
+        .textTheme;
     final groupState = ref.watch(
       groupScreenControllerProvider(
         groupId,
@@ -30,7 +32,7 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
       ),
     );
     final appBarTitle =
-        groupState.hasValue && groupState.value != null
+    groupState.hasValue && groupState.value != null
         ? groupState.value!.title
         : 'Loading Group...';
     return Scaffold(
@@ -66,28 +68,6 @@ class GroupScreen extends HookConsumerWidget with UiLoggy {
                     child: NodesList(
                       relations: group.nodes,
                     ),
-                    // ListView(
-                    //   children: [
-                    //     Text(
-                    //       'Members',
-                    //       style: textTheme.titleLarge,
-                    //     ),
-                    //     Align(
-                    //       alignment: Alignment.topLeft,
-                    //       child: ConstrainedBox(
-                    //         constraints: BoxConstraints(
-                    //           maxWidth: 300.0,
-                    //           minWidth: 150.0,
-                    //         ),
-                    //         child: NavigableList(
-                    //           items: members.nodes,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     const Divider(height: 32.0),
-                    //     // NavigableList(items: members.nodes),
-                    //   ],
-                    // ),
                   ),
                 ),
             ],
@@ -127,35 +107,38 @@ class SummaryGroup extends HookConsumerWidget with UiLoggy {
     final spacing = 8.0;
     return relationshipGroup.nodes.isNotEmpty
         ? Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8.0,
-            ),
-            child: Column(
-              children: [
-                Text(
-                  '${relationshipGroup.type.graphQlField} ('
-                  '${relationshipGroup.nodes.length})',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge,
-                ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 8.0,
+      ),
+      child: Column(
+        children: [
+          Text(
+            '${relationshipGroup.type.graphQlField} ('
+                '${relationshipGroup.nodes.length})',
+            style: Theme
+                .of(
+              context,
+            )
+                .textTheme
+                .bodyLarge,
+          ),
 
-                Wrap(
-                  spacing: spacing,
-                  runSpacing: spacing,
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: relationshipGroup.nodes
-                      .map(
-                        (node) =>
-                            NavSummaryChip(summary: node),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
-          )
+          Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            alignment: WrapAlignment.center,
+            crossAxisAlignment:
+            WrapCrossAlignment.center,
+            children: relationshipGroup.nodes
+                .map(
+                  (node) =>
+                  NavSummaryChip(summary: node),
+            )
+                .toList(),
+          ),
+        ],
+      ),
+    )
         : SizedBox.shrink();
   }
 }

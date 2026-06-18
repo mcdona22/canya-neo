@@ -12,6 +12,7 @@ abstract class User with _$User implements Navigable {
   const factory User({
     String? id,
     required String title,
+    required String displayName,
     String? subtitle,
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default([])

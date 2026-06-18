@@ -9,4 +9,9 @@ abstract class Navigable {
 
   /// Self-referential list allowing recursive nesting
   List<RelationshipGroup> get connectedNodes;
+
+  @override
+  String toString() {
+    return "$id, $title";
+  }
 }
